@@ -8,8 +8,8 @@ import (
 )
 
 type Context struct {
-	Owner string
-	Repo  string
+	Owner string `json:"owner"`
+	Repo  string `json:"repo"`
 }
 
 type Environment struct {
@@ -20,8 +20,8 @@ type Environment struct {
 }
 
 type EnvironmentResponse struct {
-	TotalCount   int           `json:"total_count"`
 	Environments []Environment `json:"environments"`
+	TotalCount   int           `json:"total_count"`
 	Context      Context       `json:"context"`
 }
 

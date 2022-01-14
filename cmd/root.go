@@ -1,53 +1,25 @@
 package cmd
 
 import (
-	"fmt"
-	"log"
+	"os"
 
-	"github.com/chelnak/gh-environments/internal/github"
-	"github.com/chelnak/gh-environments/internal/table"
-	"github.com/chelnak/gh-environments/internal/tui"
 	"github.com/spf13/cobra"
 )
 
-type environmentOptions struct {
-	Output string
-}
-
 func RootCmd() *cobra.Command {
-	opts := &environmentOptions{}
 
 	cmd := &cobra.Command{
-		Use:   "gh environments <options>",
-		Short: "Manage environments for a repository",
-		Long:  "Manage environments for a repository",
-		RunE: func(cmd *cobra.Command, args []string) error {
-
-			environmentResponse, err := github.GetEnvironments()
-			if err != nil {
-				log.Fatal(err)
-				return nil
+		Use:   "environments [command] [flags]",
+		Short: "Work with GitHub environments",
+		Long:  "Work with GitHub environments",
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(args) == 0 {
+				cmd.Help()
+				os.Exit(0)
 			}
-
-			if environmentResponse.TotalCount == 0 {
-				fmt.Printf("There are no environments in %s/%s\n", environmentResponse.Context.Owner, environmentResponse.Context.Repo)
-				return nil
-			}
-
-			switch opts.Output {
-			case "table":
-				table.Print(environmentResponse)
-			case "interactive":
-				tui.Start(environmentResponse)
-			default:
-				fmt.Printf("Unknown output type: %s\n", opts.Output)
-			}
-
-			return nil
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Output, "output", "o", "table", `Output format. One of "table, interactive"`)
-
+	cmd.AddCommand(listCmd())
 	return cmd
 }

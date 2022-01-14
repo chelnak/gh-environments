@@ -9,7 +9,7 @@ gh extension install chelnak/gh-environments
 ```
 
 ```bash
-gh extension upgrade chelnak/ghcd -environments
+gh extension upgrade chelnak/gh-environments -environments
 ```
 
 ## Usage
@@ -22,3 +22,7 @@ TBA
 [] Better command structure
 [] Get version of extension (-v?)
 [] Why is help in available commands for root with no args
+[] Fix help message usage
+[] Handle pagination
+[] list should be filterable
+[] tests

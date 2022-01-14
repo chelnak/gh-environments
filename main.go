@@ -2,24 +2,17 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
-	"github.com/chelnak/gh-environments/github"
+	"github.com/chelnak/gh-environments/cmd"
 )
 
 func main() {
 
-	environments, err := github.GetEnvironments()
-	if err != nil {
-		log.Fatal(err)
-		return
+	cmd := cmd.RootCmd()
+	if err := cmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
-
-	if len(environments) == 0 {
-		fmt.Println("It looks like there are no environments in this repository yet!")
-		return
-	}
-
-	fmt.Println(environments)
 
 }

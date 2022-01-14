@@ -7,6 +7,11 @@ import (
 	"github.com/cli/go-gh"
 )
 
+type Context struct {
+	Owner string
+	Repo  string
+}
+
 type Environment struct {
 	Id        int    `json:"id"`
 	Name      string `json:"name"`
@@ -14,36 +19,41 @@ type Environment struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
-type User struct {
-	Login string `json:"login"`
+type EnvironmentResponse struct {
+	TotalCount   int           `json:"total_count"`
+	Environments []Environment `json:"environments"`
+	Context      Context       `json:"context"`
 }
 
-func GetEnvironments() ([]Environment, error) {
+func GetEnvironments() (EnvironmentResponse, error) {
 
 	var err error
 
 	client, err := gh.RESTClient(nil)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return EnvironmentResponse{}, err
 	}
 
 	currentRepository, err := gh.CurrentRepository()
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return EnvironmentResponse{}, err
 	}
 
 	path := fmt.Sprintf("repos/%s/%s/environments", currentRepository.Owner(), currentRepository.Name())
-	var environmentResponse struct {
-		TotalCount   int           `json:"total_count"`
-		Environments []Environment `json:"environments"`
-	}
+
+	environmentResponse := EnvironmentResponse{}
 	err = client.Get(path, &environmentResponse)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return EnvironmentResponse{}, err
 	}
 
-	return environmentResponse.Environments, nil
+	environmentResponse.Context = Context{
+		Owner: currentRepository.Owner(),
+		Repo:  currentRepository.Name(),
+	}
+
+	return environmentResponse, nil
 }

@@ -1,1 +1,3 @@
-# gh-repo-environments
+# gh-environments
+
+A gh-cli extension for managing environments.

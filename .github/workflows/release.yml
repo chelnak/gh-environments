@@ -18,7 +18,7 @@ jobs:
         with:
           go-version: "1.17"
 
-      - run: "build.sh"
+      - run: ./build.sh
         env:
           # version spec is the path to the variable that will be populated with the build version
           GH_VERSION_SPEC: github.com/chelnak/gh-environments/cmd.version

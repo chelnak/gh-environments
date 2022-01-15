@@ -14,3 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: cli/gh-extension-precompile@v1
+        with:
+          go_version: "1.17"
+          build_script_override: "build.sh"
+        env:
+          # version spec is the path to the variable that will be populated with the build version
+          GH_VERSION_SPEC: github.com/chelnak/gh-environments/cmd.version
+

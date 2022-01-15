@@ -41,7 +41,7 @@ func environmentsToTable(environments []github.Environment) {
 func Print(environmentResponse github.EnvironmentResponse) {
 
 	fmt.Printf(
-		"Showing %d environments of %d in %s/%s\n\n",
+		"Showing %d of %d environments in %s/%s\n\n",
 		len(environmentResponse.Environments),
 		environmentResponse.TotalCount,
 		environmentResponse.Context.Owner,

@@ -16,39 +16,39 @@ type listOptions struct {
 	Output string
 }
 
-var opts = &listOptions{}
+var opts listOptions = listOptions{}
 
-func listCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "list <options>",
-		Short: "List environments for a repository",
-		Long:  "List environments for a repository, optionally outputting in JSON or an interactive format.",
-		Run: func(cmd *cobra.Command, args []string) {
+func init() {
+	rootCmd.AddCommand(listCmd)
+	listCmd.Flags().StringVarP(&opts.Output, "output", "o", "table", "the output format. One of: table, interactive, json")
+}
 
-			environmentResponse, err := github.GetEnvironments()
-			if err != nil {
-				log.Fatal(err)
-				os.Exit(1)
-			}
+var listCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List environments for a repository",
+	Long:  "List environments for a repository, optionally outputting in JSON or an interactive format.",
+	Run: func(cmd *cobra.Command, args []string) {
 
-			if environmentResponse.TotalCount == 0 {
-				fmt.Printf("There are no environments in %s/%s\n", environmentResponse.Context.Owner, environmentResponse.Context.Repo)
-			}
+		environmentResponse, err := github.GetEnvironments()
+		if err != nil {
+			log.Fatal(err)
+			os.Exit(1)
+		}
 
-			switch opts.Output {
-			case "table":
-				table.Print(environmentResponse)
-			case "interactive":
-				tui.Start(environmentResponse)
-			case "json":
-				json.Print(environmentResponse)
-			default:
-				fmt.Printf("Unknown output type: %s\n", opts.Output)
-				os.Exit(1)
-			}
-		},
-	}
+		if environmentResponse.TotalCount == 0 {
+			fmt.Printf("There are no environments in %s/%s\n", environmentResponse.Context.Owner, environmentResponse.Context.Repo)
+		}
 
-	cmd.Flags().StringVarP(&opts.Output, "output", "o", "table", "the output format. One of: table, interactive, json")
-	return cmd
+		switch opts.Output {
+		case "table":
+			table.Print(environmentResponse)
+		case "interactive":
+			tui.Start(environmentResponse)
+		case "json":
+			json.Print(environmentResponse)
+		default:
+			fmt.Printf("Unknown output type: %s\n", opts.Output)
+			os.Exit(1)
+		}
+	},
 }

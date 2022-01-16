@@ -7,7 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/chelnak/gh-environments/internal/github"
+	"github.com/google/go-github/v42/github"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -48,13 +48,13 @@ func (m model) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func Start(environmentResponse github.EnvironmentResponse) {
+func Render(environmentResponse github.EnvResponse) {
 
 	items := []list.Item{}
 
 	for _, environment := range environmentResponse.Environments {
 		items = append(items, Environment{
-			title: environment.Name,
+			title: *environment.Name,
 		})
 	}
 

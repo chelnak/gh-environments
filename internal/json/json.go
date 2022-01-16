@@ -3,13 +3,11 @@ package json
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/chelnak/gh-environments/internal/github"
 )
 
-func Print(environmentResponse github.EnvironmentResponse) {
+func Render(o interface{}) {
 
-	pretty, err := json.MarshalIndent(environmentResponse, "", "  ")
+	pretty, err := json.MarshalIndent(o, "", "  ")
 
 	if err != nil {
 		fmt.Println(err)

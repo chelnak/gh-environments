@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/chelnak/gh-environments/internal/github"
+	"github.com/google/go-github/v42/github"
 	"github.com/olekukonko/tablewriter"
 )
 
-func environmentsToTable(environments []github.Environment) {
+const timeFormat string = "2006-01-02 15:04:05"
+
+func environmentsToTable(environments []*github.Environment) {
 	table := tablewriter.NewWriter(os.Stdout)
 	for _, environment := range environments {
 		table.Append([]string{
-			fmt.Sprintf("%d", environment.Id),
-			environment.Name,
-			environment.CreatedAt,
-			environment.UpdatedAt,
+			fmt.Sprintf("%d", *environment.ID),
+			*environment.Name,
+			environment.CreatedAt.Local().Format(timeFormat),
+			environment.UpdatedAt.Local().Format(timeFormat),
 		})
 	}
 
@@ -38,15 +40,6 @@ func environmentsToTable(environments []github.Environment) {
 	table.Render()
 }
 
-func Print(environmentResponse github.EnvironmentResponse) {
-
-	fmt.Printf(
-		"Showing %d of %d environments in %s/%s\n\n",
-		len(environmentResponse.Environments),
-		environmentResponse.TotalCount,
-		environmentResponse.Context.Owner,
-		environmentResponse.Context.Repo,
-	)
-
+func Render(environmentResponse github.EnvResponse) {
 	environmentsToTable(environmentResponse.Environments)
 }

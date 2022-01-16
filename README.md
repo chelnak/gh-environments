@@ -2,7 +2,6 @@
 
 [![ci](https://github.com/chelnak/gh-environments/actions/workflows/ci.yml/badge.svg)](https://github.com/chelnak/gh-environments/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/release/chelnak/gh-environments.svg)](https://github.com/chelnak/gh-environments/releases/latest)
 
-
 A gh-cli extension for managing environments.
 
 ## Installation and Upgrades

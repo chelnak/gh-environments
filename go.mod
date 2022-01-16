@@ -7,6 +7,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.19.3
 	github.com/charmbracelet/lipgloss v0.4.0
 	github.com/chelnak/go-gh v0.0.2
+	github.com/erikgeiser/promptkit v0.6.0
 	github.com/google/go-github/v42 v42.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/spf13/cobra v1.3.0
@@ -17,7 +18,6 @@ require (
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/cli/shurcooL-graphql v0.0.1 // indirect
 	github.com/containerd/console v1.0.2 // indirect
-	github.com/erikgeiser/promptkit v0.6.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/henvic/httpretty v0.0.6 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect

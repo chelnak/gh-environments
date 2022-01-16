@@ -49,7 +49,6 @@ func (m model) View() string {
 }
 
 func Render(environmentResponse github.EnvResponse) {
-
 	items := []list.Item{}
 
 	for _, environment := range environmentResponse.Environments {

@@ -12,7 +12,6 @@ import (
 )
 
 func (c client) GetEnvironment(name string) (*github.Environment, error) {
-
 	ctx := context.Background()
 	env, _, err := c.GitHub.Repositories.GetEnvironment(ctx, c.Owner(), c.Repo(), name)
 	if err != nil {
@@ -23,7 +22,6 @@ func (c client) GetEnvironment(name string) (*github.Environment, error) {
 }
 
 func (c client) GetEnvironments() (*github.EnvResponse, error) {
-
 	ctx := context.Background()
 	envResponse, _, err := c.GitHub.Repositories.ListEnvironments(ctx, c.Owner(), c.Repo())
 	if err != nil {
@@ -34,7 +32,6 @@ func (c client) GetEnvironments() (*github.EnvResponse, error) {
 }
 
 func (c client) DeleteEnvironment(name string) error {
-
 	ctx := context.Background()
 	_, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.Owner(), c.Repo(), name)
 	if err != nil {

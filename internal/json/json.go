@@ -6,7 +6,6 @@ import (
 )
 
 func Render(o interface{}) {
-
 	pretty, err := json.MarshalIndent(o, "", "  ")
 
 	if err != nil {
@@ -15,5 +14,4 @@ func Render(o interface{}) {
 	}
 
 	fmt.Println(string(pretty))
-
 }

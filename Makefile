@@ -1,6 +1,5 @@
 lint:
-	@go vet ./...
-	@staticcheck ./...
+	@golangci-lint run
 
 tag:
 	@git tag $(version)

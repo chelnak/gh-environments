@@ -35,6 +35,7 @@ var listCmd = &cobra.Command{
 
 		if *environmentResponse.TotalCount == 0 {
 			fmt.Printf("There are no environments in %s/%s\n", githubClient.Owner(), githubClient.Repo())
+			return
 		}
 
 		if cmd.Flag("json").Changed && cmd.Flag("interactive").Changed {

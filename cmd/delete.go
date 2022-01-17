@@ -5,12 +5,10 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/chelnak/gh-environments/internal/client"
-	"github.com/erikgeiser/promptkit/confirmation"
+	"github.com/chelnak/gh-environments/internal/cmd/delete"
 	"github.com/spf13/cobra"
 )
 
@@ -22,30 +20,16 @@ var deleteCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		var err error
-
 		githubClient, err := client.NewClient()
 		if err != nil {
 			log.Fatal(err)
-			os.Exit(1)
 		}
 
-		promptText := fmt.Sprintf("You are about to delete %s. Are you sure that you want to continue?", args[0])
-		confirm := confirmation.New(promptText, confirmation.No)
-		ready, err := confirm.RunPrompt()
-		if err != nil {
-			log.Fatal(err)
-			os.Exit(1)
+		deletService := delete.NewDeleteService(githubClient)
+		deleteOpts := delete.DeleteOptions{
+			Name: args[0],
 		}
-
-		if ready {
-			err = githubClient.DeleteEnvironment(args[0])
-			if err != nil {
-				log.Fatal(err)
-				os.Exit(1)
-			}
-		}
-
+		deletService.Delete(&deleteOpts)
 	},
 }
 

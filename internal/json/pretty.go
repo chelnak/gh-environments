@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func Render(o interface{}) {
+func Pretty(o interface{}) {
 	pretty, err := json.MarshalIndent(o, "", "  ")
 
 	if err != nil {

@@ -11,7 +11,6 @@ linters:
     - unconvert
     - unparam
     - whitespace
-  disable:
     - errcheck
     - gosimple
     - staticcheck

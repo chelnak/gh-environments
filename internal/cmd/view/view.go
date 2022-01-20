@@ -1,7 +1,7 @@
 package view
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmdutils"
@@ -22,7 +22,8 @@ type ViewCmd interface {
 func (s *viewCmd) AsJSON(opts *ViewOptions) {
 	envResponse, err := s.client.GetEnvironment(opts.Name)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 
 	cmdutils.PrettyJSON(envResponse)

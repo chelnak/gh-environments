@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmd/view"
@@ -18,7 +18,7 @@ var viewCmd = &cobra.Command{
 
 		githubClient, err := client.NewClient()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 
 		viewCmd := view.NewViewCmd(githubClient)

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmd/list"
@@ -24,7 +23,8 @@ var listCmd = &cobra.Command{
 
 		githubClient, err := client.NewClient()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 
 		listCmd := list.NewListCmd(githubClient)

@@ -2,7 +2,6 @@ package delete
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/erikgeiser/promptkit/confirmation"
@@ -23,7 +22,8 @@ type DeleteCmd interface {
 
 func (s deleteCmd) Delete(opts *DeleteOptions) {
 	if _, err := s.client.GetEnvironment(opts.Name); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 
 	if !opts.Force {
@@ -31,7 +31,8 @@ func (s deleteCmd) Delete(opts *DeleteOptions) {
 		confirm := confirmation.New(promptText, confirmation.No)
 		ready, err := confirm.RunPrompt()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 
 		if !ready {
@@ -40,7 +41,8 @@ func (s deleteCmd) Delete(opts *DeleteOptions) {
 	}
 
 	if err := s.client.DeleteEnvironment(opts.Name); err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 }
 

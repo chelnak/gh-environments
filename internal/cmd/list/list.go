@@ -3,7 +3,6 @@ package list
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmdutils"
@@ -32,7 +31,8 @@ func NewListCmd(client client.Client) ListCmd {
 func (s *listCmd) AsTable(opts *ListOptions) {
 	envResponse, err := s.client.GetEnvironments()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 
 	if *envResponse.TotalCount == 0 {
@@ -54,24 +54,27 @@ func (s *listCmd) AsTable(opts *ListOptions) {
 func (s *listCmd) AsJSON(opts *ListOptions) {
 	envResponse, err := s.client.GetEnvironments()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
 
 	if opts.Query != "" {
 		environments, err := json.Marshal(envResponse.Environments)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 
 		var data []interface{}
 		err = json.Unmarshal(environments, &data)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 		filterResponse := cmdutils.QueryResult{}
 		err = cmdutils.QueryJSON(data, &filterResponse, opts.Query)
 		if err != nil {
-			log.Fatal("Invalid query!\n", err)
+			fmt.Println("Invalid query!\n", err)
 		}
 
 		cmdutils.PrettyJSON(filterResponse.Result)

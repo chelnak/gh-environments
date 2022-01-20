@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmd/delete"
@@ -20,7 +20,8 @@ var deleteCmd = &cobra.Command{
 
 		githubClient, err := client.NewClient()
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 
 		deletCmd := delete.NewDeleteCmd(githubClient)

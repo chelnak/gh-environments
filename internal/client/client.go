@@ -14,7 +14,7 @@ type Client interface {
 }
 
 type client struct {
-	GitHub github.Client
+	GitHub *github.Client
 	owner  string
 	repo   string
 }
@@ -40,6 +40,6 @@ func NewClient() (Client, error) {
 		return nil, err
 	}
 
-	client := client{GitHub: *g, owner: currentRepository.Owner(), repo: currentRepository.Name()}
+	client := client{GitHub: g, owner: currentRepository.Owner(), repo: currentRepository.Name()}
 	return client, nil
 }

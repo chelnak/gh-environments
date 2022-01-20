@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/chelnak/gh-environments/internal/client"
@@ -9,8 +10,9 @@ import (
 )
 
 var (
-	perPage      int
+	limit        int
 	outputAsJSON bool
+	query        string
 )
 
 // listCmd represents the list command
@@ -25,22 +27,28 @@ var listCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		listService := list.NewListService(githubClient)
+		listCmd := list.NewListCmd(githubClient)
 		listOpts := list.ListOptions{
-			PerPage: perPage,
+			PerPage: limit,
+			Query:   query,
+		}
+
+		if query != "" && !outputAsJSON {
+			fmt.Println("You must specify --json to use the --query flag")
+			return
 		}
 
 		if outputAsJSON {
-			listService.AsJSON(&listOpts)
+			listCmd.AsJSON(&listOpts)
 		} else {
-			// The default is always table mode
-			listService.AsPaginatedTable(&listOpts)
+			listCmd.AsTable(&listOpts)
 		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	listCmd.Flags().IntVarP(&perPage, "limit", "l", 30, "the number of environments to show per page")
+	listCmd.Flags().IntVarP(&limit, "limit", "l", 30, "the number of environments to show per page")
 	listCmd.Flags().BoolVarP(&outputAsJSON, "json", "j", false, "Output in JSON format")
+	listCmd.Flags().StringVarP(&query, "query", "q", "", "a query string to filter environments")
 }

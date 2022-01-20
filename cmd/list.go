@@ -41,7 +41,9 @@ var listCmd = &cobra.Command{
 		if outputAsJSON {
 			listCmd.AsJSON(&listOpts)
 		} else {
+			fmt.Println()
 			listCmd.AsTable(&listOpts)
+			fmt.Println()
 		}
 	},
 }

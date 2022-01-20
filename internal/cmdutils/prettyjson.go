@@ -1,13 +1,15 @@
-package json
+package cmdutils
 
 import (
 	"encoding/json"
+
 	"fmt"
 )
 
-func Pretty(o interface{}) {
+// PrettyJSON is a convenience function to pretty print a JSON string
+// using json.MarshalIndent.
+func PrettyJSON(o interface{}) {
 	pretty, err := json.MarshalIndent(o, "", "  ")
-
 	if err != nil {
 		fmt.Println(err)
 		return

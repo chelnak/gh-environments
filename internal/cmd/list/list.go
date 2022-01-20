@@ -18,8 +18,8 @@ type listCmd struct {
 }
 
 type ListCmd interface {
-	AsJSON(opts *ListOptions)
-	AsTable(opts *ListOptions)
+	AsJSON(opts *ListOptions) error
+	AsTable(opts *ListOptions) error
 }
 
 func NewListCmd(client client.Client) ListCmd {
@@ -28,16 +28,15 @@ func NewListCmd(client client.Client) ListCmd {
 	}
 }
 
-func (s *listCmd) AsTable(opts *ListOptions) {
+func (s *listCmd) AsTable(opts *ListOptions) error {
 	envResponse, err := s.client.GetEnvironments()
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	if *envResponse.TotalCount == 0 {
 		fmt.Printf("There are no environments in %s/%s\n", s.client.GetOwner(), s.client.GetRepo())
-		return
+		return err
 	}
 
 	fmt.Printf(
@@ -49,36 +48,38 @@ func (s *listCmd) AsTable(opts *ListOptions) {
 	)
 
 	newTable(envResponse.Environments, nil)
+
+	return nil
 }
 
-func (s *listCmd) AsJSON(opts *ListOptions) {
+func (s *listCmd) AsJSON(opts *ListOptions) error {
 	envResponse, err := s.client.GetEnvironments()
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	if opts.Query != "" {
 		environments, err := json.Marshal(envResponse.Environments)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		var data []interface{}
 		err = json.Unmarshal(environments, &data)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
+
 		filterResponse := cmdutils.QueryResult{}
 		err = cmdutils.QueryJSON(data, &filterResponse, opts.Query)
 		if err != nil {
-			fmt.Println("Invalid query!\n", err)
+			return fmt.Errorf("invalid query!\n%s", err)
 		}
 
 		cmdutils.PrettyJSON(filterResponse.Result)
 	} else {
 		cmdutils.PrettyJSON(envResponse.Environments)
 	}
+
+	return nil
 }

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmd/delete"
 	"github.com/spf13/cobra"
@@ -16,12 +14,11 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete an environment.",
 	Long:  "Delete an environment.",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
 		githubClient, err := client.NewClient()
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		deletCmd := delete.NewDeleteCmd(githubClient)
@@ -29,11 +26,17 @@ var deleteCmd = &cobra.Command{
 			Name:  args[0],
 			Force: force,
 		}
-		deletCmd.Delete(&deleteOpts)
+
+		err = deletCmd.Delete(&deleteOpts)
+		if err != nil {
+			return err
+		}
+
+		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+	RootCmd.AddCommand(deleteCmd)
 	deleteCmd.Flags().BoolVarP(&force, "force", "f", false, "Does not prompt for confirmation upon deletion")
 }

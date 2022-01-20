@@ -1,8 +1,6 @@
 package view
 
 import (
-	"fmt"
-
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmdutils"
 )
@@ -16,17 +14,18 @@ type viewCmd struct {
 }
 
 type ViewCmd interface {
-	AsJSON(opts *ViewOptions)
+	AsJSON(opts *ViewOptions) error
 }
 
-func (s *viewCmd) AsJSON(opts *ViewOptions) {
+func (s *viewCmd) AsJSON(opts *ViewOptions) error {
 	envResponse, err := s.client.GetEnvironment(opts.Name)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	cmdutils.PrettyJSON(envResponse)
+
+	return nil
 }
 
 func NewViewCmd(client client.Client) ViewCmd {

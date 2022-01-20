@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmd/view"
 	"github.com/spf13/cobra"
@@ -14,11 +12,11 @@ var viewCmd = &cobra.Command{
 	Short: "View details about an environment.",
 	Long:  "View details about an environment. Optionally output as JSON.",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
 		githubClient, err := client.NewClient()
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		viewCmd := view.NewViewCmd(githubClient)
@@ -28,9 +26,10 @@ var viewCmd = &cobra.Command{
 
 		viewCmd.AsJSON(&viewOpts)
 
+		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(viewCmd)
+	RootCmd.AddCommand(viewCmd)
 }

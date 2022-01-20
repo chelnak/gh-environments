@@ -8,12 +8,13 @@ import (
 
 // PrettyJSON is a convenience function to pretty print a JSON string
 // using json.MarshalIndent.
-func PrettyJSON(o interface{}) {
+func PrettyJSON(o interface{}) error {
 	pretty, err := json.MarshalIndent(o, "", "  ")
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	fmt.Println(string(pretty))
+
+	return nil
 }

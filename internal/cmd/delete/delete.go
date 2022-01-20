@@ -17,13 +17,12 @@ type deleteCmd struct {
 }
 
 type DeleteCmd interface {
-	Delete(opts *DeleteOptions)
+	Delete(opts *DeleteOptions) error
 }
 
-func (s deleteCmd) Delete(opts *DeleteOptions) {
+func (s deleteCmd) Delete(opts *DeleteOptions) error {
 	if _, err := s.client.GetEnvironment(opts.Name); err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 
 	if !opts.Force {
@@ -31,19 +30,19 @@ func (s deleteCmd) Delete(opts *DeleteOptions) {
 		confirm := confirmation.New(promptText, confirmation.No)
 		ready, err := confirm.RunPrompt()
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
 		if !ready {
-			return
+			return nil
 		}
 	}
 
 	if err := s.client.DeleteEnvironment(opts.Name); err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
+
+	return nil
 }
 
 func NewDeleteCmd(client client.Client) DeleteCmd {

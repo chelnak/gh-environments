@@ -9,7 +9,7 @@ import (
 var version = "dev"
 var ErrSilent = errors.New("ErrSilent")
 
-// rootCmd represents the base command when called without any subcommands
+// RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:           "environments [command]",
 	Aliases:       []string{"env"},

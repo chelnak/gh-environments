@@ -24,7 +24,10 @@ var viewCmd = &cobra.Command{
 			Name: args[0],
 		}
 
-		viewCmd.AsJSON(&viewOpts)
+		err = viewCmd.AsJSON(&viewOpts)
+		if err != nil {
+			return err
+		}
 
 		return nil
 	},

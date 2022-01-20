@@ -23,7 +23,10 @@ func (s *viewCmd) AsJSON(opts *ViewOptions) error {
 		return err
 	}
 
-	cmdutils.PrettyJSON(envResponse)
+	err = cmdutils.PrettyJSON(envResponse)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

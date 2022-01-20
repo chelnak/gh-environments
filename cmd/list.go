@@ -39,10 +39,16 @@ var listCmd = &cobra.Command{
 		}
 
 		if outputAsJSON {
-			listCmd.AsJSON(&listOpts)
+			err = listCmd.AsJSON(&listOpts)
+			if err != nil {
+				return err
+			}
 		} else {
 			fmt.Println()
-			listCmd.AsTable(&listOpts)
+			err = listCmd.AsTable(&listOpts)
+			if err != nil {
+				return err
+			}
 			fmt.Println()
 		}
 

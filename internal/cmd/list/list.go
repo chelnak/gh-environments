@@ -76,9 +76,15 @@ func (s *listCmd) AsJSON(opts *ListOptions) error {
 			return fmt.Errorf("invalid query!\n%s", err)
 		}
 
-		cmdutils.PrettyJSON(filterResponse.Result)
+		err = cmdutils.PrettyJSON(filterResponse.Result)
+		if err != nil {
+			return err
+		}
 	} else {
-		cmdutils.PrettyJSON(envResponse.Environments)
+		err = cmdutils.PrettyJSON(envResponse.Environments)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

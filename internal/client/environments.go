@@ -13,7 +13,7 @@ import (
 
 func (c client) GetEnvironment(name string) (*github.Environment, error) {
 	ctx := context.Background()
-	env, _, err := c.GitHub.Repositories.GetEnvironment(ctx, c.Owner(), c.Repo(), name)
+	env, _, err := c.GitHub.Repositories.GetEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
 	if err != nil {
 		return nil, err
 	}
@@ -21,19 +21,19 @@ func (c client) GetEnvironment(name string) (*github.Environment, error) {
 	return env, nil
 }
 
-func (c client) GetEnvironments() (*github.EnvResponse, error) {
+func (c client) GetEnvironments() (github.EnvResponse, error) {
 	ctx := context.Background()
-	envResponse, _, err := c.GitHub.Repositories.ListEnvironments(ctx, c.Owner(), c.Repo())
+	envResponse, _, err := c.GitHub.Repositories.ListEnvironments(ctx, c.GetOwner(), c.GetRepo())
 	if err != nil {
-		return nil, err
+		return github.EnvResponse{}, err
 	}
 
-	return envResponse, nil
+	return *envResponse, nil
 }
 
 func (c client) DeleteEnvironment(name string) error {
 	ctx := context.Background()
-	_, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.Owner(), c.Repo(), name)
+	_, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
 	if err != nil {
 		return err
 	}

@@ -4,32 +4,32 @@ import (
 	"log"
 
 	"github.com/chelnak/gh-environments/internal/client"
-	"github.com/chelnak/gh-environments/internal/json"
+	"github.com/chelnak/gh-environments/internal/cmdutils"
 )
 
 type ViewOptions struct {
 	Name string
 }
 
-type viewService struct {
+type viewCmd struct {
 	client client.Client
 }
 
-type ViewService interface {
+type ViewCmd interface {
 	AsJSON(opts *ViewOptions)
 }
 
-func (s *viewService) AsJSON(opts *ViewOptions) {
+func (s *viewCmd) AsJSON(opts *ViewOptions) {
 	envResponse, err := s.client.GetEnvironment(opts.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	json.Pretty(envResponse)
+	cmdutils.PrettyJSON(envResponse)
 }
 
-func NewViewService(client client.Client) ViewService {
-	return &viewService{
+func NewViewCmd(client client.Client) ViewCmd {
+	return &viewCmd{
 		client: client,
 	}
 }

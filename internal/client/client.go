@@ -7,10 +7,10 @@ import (
 
 type Client interface {
 	GetEnvironment(name string) (*github.Environment, error)
-	GetEnvironments() (*github.EnvResponse, error)
+	GetEnvironments() (github.EnvResponse, error)
 	DeleteEnvironment(name string) error
-	Owner() string
-	Repo() string
+	GetOwner() string
+	GetRepo() string
 }
 
 type client struct {
@@ -19,11 +19,11 @@ type client struct {
 	repo   string
 }
 
-func (c client) Owner() string {
+func (c client) GetOwner() string {
 	return c.owner
 }
 
-func (c client) Repo() string {
+func (c client) GetRepo() string {
 	return c.repo
 }
 

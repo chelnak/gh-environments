@@ -25,12 +25,12 @@ var viewCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		viewService := view.NewViewService(githubClient)
+		viewCmd := view.NewViewCmd(githubClient)
 		viewOpts := view.ViewOptions{
 			Name: args[0],
 		}
 
-		viewService.AsJSON(&viewOpts)
+		viewCmd.AsJSON(&viewOpts)
 
 	},
 }

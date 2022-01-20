@@ -25,11 +25,11 @@ var deleteCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		deletService := delete.NewDeleteService(githubClient)
+		deletCmd := delete.NewDeleteCmd(githubClient)
 		deleteOpts := delete.DeleteOptions{
 			Name: args[0],
 		}
-		deletService.Delete(&deleteOpts)
+		deletCmd.Delete(&deleteOpts)
 	},
 }
 

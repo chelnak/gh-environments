@@ -12,15 +12,15 @@ type DeleteOptions struct {
 	Name string
 }
 
-type deleteService struct {
+type deleteCmd struct {
 	client client.Client
 }
 
-type DeleteService interface {
+type DeleteCmd interface {
 	Delete(opts *DeleteOptions)
 }
 
-func (s deleteService) Delete(opts *DeleteOptions) {
+func (s deleteCmd) Delete(opts *DeleteOptions) {
 	promptText := fmt.Sprintf("You are about to delete %s. Are you sure that you want to continue?", opts.Name)
 	confirm := confirmation.New(promptText, confirmation.No)
 	ready, err := confirm.RunPrompt()
@@ -36,8 +36,8 @@ func (s deleteService) Delete(opts *DeleteOptions) {
 	}
 }
 
-func NewDeleteService(client client.Client) DeleteService {
-	return &deleteService{
+func NewDeleteCmd(client client.Client) DeleteCmd {
+	return &deleteCmd{
 		client: client,
 	}
 }

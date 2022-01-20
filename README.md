@@ -17,33 +17,17 @@ gh extension upgrade chelnak/gh-environments
 ## Usage
 
 ``` bash
-Work with GitHub environments
-
-Usage:
-  environments [command] [flags]
-  environments [command]
-
-Available Commands:
-  completion  Generate the autocompletion script for the specified shell
-  delete      Delete an environment.
-  help        Help about any command
-  list        List environments for a repository
-  view        View details about an environment.
-
-Flags:
-  -h, --help      help for environments
-  -v, --version   version for environments
-
-Use "environments [command] --help" for more information about a command.
+gh environments --help
 ```
 
-<!-- ## TODO
+## Setting aliases
 
-[] Usage docs
-[] Better command structure
-[] Get version of extension (-v?)
-[] Why is help in available commands for root with no args
-[] Fix help message usage
-[] Handle pagination
-[] list should be filterable
-[] tests -->
+It's possible to set command aliases with `gh alias set`. Here are some examples for the `gh environments` extension:
+
+```bash
+# Set a short name for the command
+gh alias set env environments
+
+# Or save a complex jq query
+gh alias set myalias "environments list --json -q '.[] | select(.name | contains(""\"te""\"))'"
+```

@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var force bool
+
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete <environment>",
@@ -23,7 +25,8 @@ var deleteCmd = &cobra.Command{
 
 		deletCmd := delete.NewDeleteCmd(githubClient)
 		deleteOpts := delete.DeleteOptions{
-			Name: args[0],
+			Name:  args[0],
+			Force: force,
 		}
 		deletCmd.Delete(&deleteOpts)
 	},
@@ -31,4 +34,5 @@ var deleteCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(deleteCmd)
+	deleteCmd.Flags().BoolVarP(&force, "force", "f", false, "Does not prompt for confirmation upon deletion")
 }

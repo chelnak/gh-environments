@@ -9,7 +9,8 @@ import (
 )
 
 type DeleteOptions struct {
-	Name string
+	Name  string
+	Force bool
 }
 
 type deleteCmd struct {
@@ -21,18 +22,25 @@ type DeleteCmd interface {
 }
 
 func (s deleteCmd) Delete(opts *DeleteOptions) {
-	promptText := fmt.Sprintf("You are about to delete %s. Are you sure that you want to continue?", opts.Name)
-	confirm := confirmation.New(promptText, confirmation.No)
-	ready, err := confirm.RunPrompt()
-	if err != nil {
+	if _, err := s.client.GetEnvironment(opts.Name); err != nil {
 		log.Fatal(err)
 	}
 
-	if ready {
-		err = s.client.DeleteEnvironment(opts.Name)
+	if !opts.Force {
+		promptText := fmt.Sprintf("You are about to delete %s. Are you sure that you want to continue?", opts.Name)
+		confirm := confirmation.New(promptText, confirmation.No)
+		ready, err := confirm.RunPrompt()
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		if !ready {
+			return
+		}
+	}
+
+	if err := s.client.DeleteEnvironment(opts.Name); err != nil {
+		log.Fatal(err)
 	}
 }
 

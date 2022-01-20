@@ -33,5 +33,4 @@ var viewCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(viewCmd)
-	viewCmd.Flags().BoolP("json", "j", false, "Output in JSON format")
 }

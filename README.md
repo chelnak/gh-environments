@@ -31,3 +31,19 @@ gh alias set env environments
 # Or save a complex jq query
 gh alias set myalias "environments list --json -q '.[] | select(.name | contains(""\"te""\"))'"
 ```
+
+## Advanced usage
+
+Remove multiple environments at once
+
+```bash
+#! /bin/bash
+
+set -e
+
+envs=$(gh environments list --json -q '.[] | select(.name | contains("temp-")) | .name')
+for row in $(echo "${envs}" | jq -r '.[]'); do
+    echo "Removing environment $row"
+    gh environments delete $row --force
+done
+```

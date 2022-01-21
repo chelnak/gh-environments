@@ -36,9 +36,9 @@ func (c client) GetEnvironments() (*github.EnvResponse, error) {
 
 func (c client) DeleteEnvironment(name string) error {
 	ctx := context.Background()
-	response, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
+	_, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
 
-	if response.StatusCode != http.StatusOK || err != nil {
+	if err != nil {
 		return fmt.Errorf("an error ocured: %s", err)
 	}
 

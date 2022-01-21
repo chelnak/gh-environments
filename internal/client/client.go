@@ -9,8 +9,10 @@ type Client interface {
 	GetEnvironment(name string) (*github.Environment, error)
 	GetEnvironments() (*github.EnvResponse, error)
 	DeleteEnvironment(name string) error
+	GetSecretsForEnvironment(name string, opts *github.ListOptions) (*github.Secrets, error)
 	GetOwner() string
 	GetRepo() string
+	GetRepoID() (int64, error)
 }
 
 type client struct {
@@ -39,7 +41,6 @@ func NewClient() (Client, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	client := client{GitHub: g, owner: currentRepository.Owner(), repo: currentRepository.Name()}
 	return client, nil
 }

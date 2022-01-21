@@ -47,7 +47,9 @@ func (s *listCmd) AsTable(opts *ListOptions) error {
 		s.client.GetRepo(),
 	)
 
-	newTable(envResponse.Environments, nil)
+	if err := s.newTable(envResponse.Environments, nil); err != nil {
+		return err
+	}
 
 	return nil
 }

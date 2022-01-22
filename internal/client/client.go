@@ -10,6 +10,9 @@ type Client interface {
 	GetEnvironments() (*github.EnvResponse, error)
 	DeleteEnvironment(name string) error
 	GetSecretsForEnvironment(name string, opts *github.ListOptions) (*github.Secrets, error)
+	CreateEnvironment(name string, waitTimer int, reviewers []*github.EnvReviewers, deploymentBranchPolicy github.BranchPolicy) error
+	GetUser(name string) (*github.User, error)
+	GetTeam(name string) (*github.Team, error)
 	GetOwner() string
 	GetRepo() string
 	GetRepoID() (int64, error)

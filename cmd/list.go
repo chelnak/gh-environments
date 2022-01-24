@@ -17,9 +17,10 @@ var (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List environments for a repository",
-	Long:  "List environments for a repository, optionally outputting in JSON or an interactive format.",
+	Use:     "list",
+	Short:   "List environments for a repository",
+	Long:    "List environments for a repository, optionally outputting in JSON or an interactive format.",
+	Aliases: []string{"ls"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		githubClient, err := client.NewClient()

@@ -1,25 +1,25 @@
 package client
 
 import (
-	"github.com/chelnak/go-gh"
+	"github.com/cli/go-gh"
 	"github.com/google/go-github/v42/github"
 )
 
 type Client interface {
-	GetEnvironment(name string) (*github.Environment, error)
-	GetEnvironments() (*github.EnvResponse, error)
-	DeleteEnvironment(name string) error
-	GetSecretsForEnvironment(name string, opts *github.ListOptions) (*github.Secrets, error)
-	CreateEnvironment(name string, waitTimer int, reviewers []*github.EnvReviewers, deploymentBranchPolicy github.BranchPolicy) error
-	GetUser(name string) (*github.User, error)
-	GetTeam(name string) (*github.Team, error)
+	GetEnvironment(name string) (*github.Environment, *github.Response, error)
+	GetEnvironments() (*github.EnvResponse, *github.Response, error)
+	DeleteEnvironment(name string) (*github.Response, error)
+	GetSecretsForEnvironment(name string, opts *github.ListOptions) (*github.Secrets, *github.Response, error)
+	CreateEnvironment(name string, waitTimer int, reviewers []*github.EnvReviewers, deploymentBranchPolicy github.BranchPolicy) (*github.Environment, *github.Response, error)
+	GetUser(name string) (*github.User, *github.Response, error)
+	GetTeam(name string) (*github.Team, *github.Response, error)
 	GetOwner() string
 	GetRepo() string
 	GetRepoID() (int64, error)
 }
 
 type client struct {
-	GitHub *github.Client
+	gitHub *github.Client
 	owner  string
 	repo   string
 }
@@ -33,17 +33,17 @@ func (c client) GetRepo() string {
 }
 
 func NewClient() (Client, error) {
-	restClient, err := gh.RESTClient(nil)
+	httpClient, err := gh.HTTPClient(nil)
 	if err != nil {
 		return nil, err
 	}
 
-	g := github.NewClient(restClient.GetHTTPClient())
+	g := github.NewClient(httpClient)
 
 	currentRepository, err := gh.CurrentRepository()
 	if err != nil {
 		return nil, err
 	}
-	client := client{GitHub: g, owner: currentRepository.Owner(), repo: currentRepository.Name()}
+	client := client{gitHub: g, owner: currentRepository.Owner(), repo: currentRepository.Name()}
 	return client, nil
 }

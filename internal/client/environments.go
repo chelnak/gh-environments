@@ -2,39 +2,33 @@ package client
 
 import (
 	"context"
-	"fmt"
-	"net/http"
 
 	"github.com/google/go-github/v42/github"
 )
 
-func (c client) GetEnvironment(name string) (*github.Environment, error) {
+func (c client) GetEnvironment(name string) (*github.Environment, *github.Response, error) {
 	ctx := context.Background()
-	env, response, err := c.GitHub.Repositories.GetEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
+	env, response, err := c.gitHub.Repositories.GetEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
 
-	if response.StatusCode != http.StatusOK || err != nil {
-		switch response.StatusCode {
-		case http.StatusNotFound:
-			return nil, fmt.Errorf("environment %s not found", name)
-		default:
-			return nil, fmt.Errorf("an error ocured: %s", err)
-		}
-	}
-	return env, nil
-}
-
-func (c client) GetEnvironments() (*github.EnvResponse, error) {
-	ctx := context.Background()
-	envResponse, response, err := c.GitHub.Repositories.ListEnvironments(ctx, c.GetOwner(), c.GetRepo())
-
-	if response.StatusCode != http.StatusOK || err != nil {
-		return nil, fmt.Errorf("an error ocured: %s", err)
+	if err != nil {
+		return nil, response, err
 	}
 
-	return envResponse, nil
+	return env, response, nil
 }
 
-func (c client) CreateEnvironment(name string, waitTimer int, reviewers []*github.EnvReviewers, deploymentBranchPolicy github.BranchPolicy) error {
+func (c client) GetEnvironments() (*github.EnvResponse, *github.Response, error) {
+	ctx := context.Background()
+	envResponse, response, err := c.gitHub.Repositories.ListEnvironments(ctx, c.GetOwner(), c.GetRepo())
+
+	if err != nil {
+		return nil, response, err
+	}
+
+	return envResponse, response, nil
+}
+
+func (c client) CreateEnvironment(name string, waitTimer int, reviewers []*github.EnvReviewers, deploymentBranchPolicy github.BranchPolicy) (*github.Environment, *github.Response, error) {
 	ctx := context.Background()
 
 	opts := github.CreateUpdateEnvironment{
@@ -46,27 +40,22 @@ func (c client) CreateEnvironment(name string, waitTimer int, reviewers []*githu
 		opts.DeploymentBranchPolicy = &deploymentBranchPolicy
 	}
 
-	_, response, err := c.GitHub.Repositories.CreateUpdateEnvironment(ctx, c.GetOwner(), c.GetRepo(), name, &opts)
-
-	if response.StatusCode != http.StatusOK || err != nil {
-		switch response.StatusCode {
-		case http.StatusUnprocessableEntity:
-			return fmt.Errorf("there was an issue with the request. Please check the documentation for more information.\n%s", err)
-		default:
-			return fmt.Errorf("an error ocured: %s", err)
-		}
-	}
-
-	return nil
-}
-
-func (c client) DeleteEnvironment(name string) error {
-	ctx := context.Background()
-	_, err := c.GitHub.Repositories.DeleteEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
+	env, response, err := c.gitHub.Repositories.CreateUpdateEnvironment(ctx, c.GetOwner(), c.GetRepo(), name, &opts)
 
 	if err != nil {
-		return fmt.Errorf("an error ocured: %s", err)
+		return nil, response, err
 	}
 
-	return nil
+	return env, response, nil
+}
+
+func (c client) DeleteEnvironment(name string) (*github.Response, error) {
+	ctx := context.Background()
+	response, err := c.gitHub.Repositories.DeleteEnvironment(ctx, c.GetOwner(), c.GetRepo(), name)
+
+	if err != nil {
+		return response, err
+	}
+
+	return response, err
 }

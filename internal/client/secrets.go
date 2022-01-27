@@ -2,22 +2,22 @@ package client
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/go-github/v42/github"
 )
 
-func (c client) GetSecretsForEnvironment(environmentName string, opts *github.ListOptions) (*github.Secrets, error) {
+func (c client) GetSecretsForEnvironment(environmentName string, opts *github.ListOptions) (*github.Secrets, *github.Response, error) {
 	ctx := context.Background()
 	repoID, err := c.GetRepoID()
 	if err != nil {
-		return nil, fmt.Errorf("could not get repository id for %s/%s\n%s", c.GetOwner(), c.GetRepo(), err)
+		return nil, nil, err
 	}
 
-	secrets, _, err := c.GitHub.Actions.ListEnvSecrets(ctx, int(repoID), environmentName, opts)
+	secrets, response, err := c.gitHub.Actions.ListEnvSecrets(ctx, int(repoID), environmentName, opts)
+
 	if err != nil {
-		return nil, fmt.Errorf("could not get repository secrets for environment %s: %s", environmentName, err)
+		return nil, response, err
 	}
 
-	return secrets, nil
+	return secrets, response, nil
 }

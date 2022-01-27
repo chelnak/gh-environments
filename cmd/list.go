@@ -2,10 +2,9 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/chelnak/gh-environments/internal/client"
-	"github.com/chelnak/gh-environments/internal/cmd/list"
+	"github.com/chelnak/gh-environments/internal/cmd"
 	"github.com/spf13/cobra"
 )
 
@@ -21,15 +20,15 @@ var listCmd = &cobra.Command{
 	Short:   "List environments for a repository",
 	Long:    "List environments for a repository, optionally outputting in JSON or an interactive format.",
 	Aliases: []string{"ls"},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(command *cobra.Command, args []string) error {
 
 		githubClient, err := client.NewClient()
 		if err != nil {
 			return err
 		}
 
-		listCmd := list.NewListCmd(githubClient)
-		listOpts := list.ListOptions{
+		listCmd := cmd.NewListCmd(githubClient)
+		listOpts := cmd.ListOptions{
 			PerPage: limit,
 			Query:   query,
 		}
@@ -40,17 +39,15 @@ var listCmd = &cobra.Command{
 		}
 
 		if outputAsJSON {
-			err = listCmd.AsJSON(&listOpts)
+			err = listCmd.AsJSON(listOpts)
 			if err != nil {
 				return err
 			}
 		} else {
-			fmt.Println()
-			err = listCmd.AsTable(&listOpts)
+			err = listCmd.AsTable(listOpts)
 			if err != nil {
 				return err
 			}
-			fmt.Println()
 		}
 
 		return nil
@@ -58,7 +55,7 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().IntVarP(&limit, "limit", "l", 30, "the number of environments to show per page")
 	listCmd.Flags().BoolVarP(&outputAsJSON, "json", "j", false, "Output in JSON format")
 	listCmd.Flags().StringVarP(&query, "query", "q", "", "a query string to filter environments")

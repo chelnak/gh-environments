@@ -8,7 +8,7 @@ import (
 
 func (c client) GetRepoID() (int64, error) {
 	ctx := context.Background()
-	repo, response, err := c.GitHub.Repositories.Get(ctx, c.GetOwner(), c.GetRepo())
+	repo, response, err := c.gitHub.Repositories.Get(ctx, c.GetOwner(), c.GetRepo())
 
 	if response.StatusCode != http.StatusOK || err != nil {
 		switch response.StatusCode {

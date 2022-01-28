@@ -3,6 +3,7 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmdutils"
@@ -80,6 +81,7 @@ func (cmd listCmd) AsTable(opts ListOptions) error {
 }
 
 func (cmd listCmd) AsJSON(opts ListOptions) error {
+	writer := os.Stdout
 	envResponse, _, err := cmd.client.GetEnvironments()
 	if err != nil {
 		return err
@@ -103,12 +105,12 @@ func (cmd listCmd) AsJSON(opts ListOptions) error {
 			return fmt.Errorf("invalid query!\n%s", err)
 		}
 
-		err = cmdutils.PrettyJSON(filterResponse.Result)
+		err = cmdutils.PrettyJSON(writer, filterResponse.Result)
 		if err != nil {
 			return err
 		}
 	} else {
-		err = cmdutils.PrettyJSON(envResponse.Environments)
+		err = cmdutils.PrettyJSON(writer, envResponse.Environments)
 		if err != nil {
 			return err
 		}

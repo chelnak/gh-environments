@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/chelnak/gh-environments/internal/client"
 	"github.com/chelnak/gh-environments/internal/cmdutils"
@@ -37,7 +38,8 @@ func (cmd viewCmd) AsJSON(opts ViewOptions) error {
 		}
 	}
 
-	err = cmdutils.PrettyJSON(envResponse)
+	writer := os.Stdout
+	err = cmdutils.PrettyJSON(writer, envResponse)
 	if err != nil {
 		return err
 	}

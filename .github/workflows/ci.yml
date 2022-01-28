@@ -40,7 +40,7 @@ jobs:
   release:
     name: release  
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'push') || (github.event_name == 'pull_request' && github.actor == github.repository_owner) }}
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'main') }}
     needs:
       - "lint"
     steps:

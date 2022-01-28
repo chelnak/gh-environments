@@ -4,21 +4,55 @@ name: ci
 
 on:
   push:
+    tags:
+      - v*
+  pull_request:
     branches:
       - main
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+env:
+  GO_VERSION: 1.17
+
 jobs:
-  golangci:
+  lint:
     name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: golangci-lint
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: lint
         uses: golangci/golangci-lint-action@v2
         with:
           version: latest
+
+      - name: test
+        run: go test -v ./...
+
+  release:
+    name: release  
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'push') || (github.event_name == 'pull_request' && github.actor == github.repository_owner) }}
+    needs:
+      - "lint"
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - run: ./build.sh
+        env:
+          # version spec is the path to the variable that will be populated with the build version
+          GH_VERSION_SPEC: github.com/chelnak/gh-environments/cmd.version
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
